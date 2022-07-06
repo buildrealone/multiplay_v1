@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Multiplay Sample by London</title>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.4.0/socket.io.slim.js"></script>
+    <script src="https://londonpark.xyz/main-v1.js"></script>
+    <script src="https://londonpark.xyz/network.js"></script>
+    <script src="https://londonpark.xyz/randomizer.js"></script>
+    <script src="https://londonpark.xyz/environment-v1.3.1.js"></script>
+    <script src="https://londonpark.xyz/spawn-in-circle.js"></script>
+    <script> 
+      NAF.schemas.getComponentsOriginal = NAF.schemas.getComponents;
+      NAF.schemas.getComponents = (template) => {
+        if (!NAF.schemas.hasTemplate('#avatar-template')) {
+          NAF.schemas.add({
+            template: '#avatar-template',
+            components: [
+              'position',
+              'rotation',
+              {
+                selector: '.head',
+                component: 'material',
+                property: 'color'
+              }
+            ]
+          });
+        }
+        const components = NAF.schemas.getComponentsOriginal(template);
+        return components;
+      };
+    </script>
+  </head>
+  <body>
+    <a-scene
+      networked-scene=" 
+      room: basic;
+      debug: true;
+      adapter: socketio;
+      "
+      loading-screen="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+      loading-screen="enabled: false"
+    >
+      <a-assets>
+        <template id="avatar-template">
+          <a-entity class="avatar">
+            <a-sphere class="head" scale="0.45 0.5 0.4"></a-sphere>
+            <a-entity class="face" position="0 0.05 0">
+              <a-sphere class="eye" color="#efefef" position="0.16 0.1 -0.35" scale="0.12 0.12 0.12">
+                <a-sphere class="pupil" color="#000" position="0 0 -1" scale="0.2 0.2 0.2"></a-sphere>
+              </a-sphere>
+              <a-sphere class="eye" color="#efefef" position="-0.16 0.1 -0.35" scale="0.12 0.12 0.12">
+                <a-sphere class="pupil" color="#000" position="0 0 -1" scale="0.2 0.2 0.2"></a-sphere>
+              </a-sphere>
+            </a-entity>
+          </a-entity>
+        </template>
+      </a-assets>
+
+        <a-entity
+          id="player"
+          networked="template:#avatar-template;attachTemplateToLocal:false;"
+          camera
+          position="0 1.6 0"
+          spawn-in-circle="radius:3"
+          wasd-controls
+          look-controls
+        >
+          <a-sphere class="head" random-color></a-sphere>
+        </a-entity>
+
+      <a-entity environment="preset:forest"></a-entity>
+      <a-entity light="type:ambient;intensity:0.5"></a-entity>
+    </a-scene>
+
+    <script>
+      function onConnect() {
+        console.log("conneted at: ", new Date());
+      };
+    </script>
+  </body>
+</html>

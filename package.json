@@ -1,0 +1,12 @@
+{
+  "name": "multiplay-london",
+  "version": "1.0",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "socket.io": "^2.5.0"
+  }
+}
